@@ -1,0 +1,147 @@
+\documentclass{article}
+
+% Input encoding for UTF-8 characters
+\usepackage[utf8]{inputenc}
+
+% AMS math packages for advanced math typesetting
+\usepackage{amsmath}    % Advanced math environments and commands
+\usepackage{amssymb}    % Additional math symbols
+\usepackage{amsfonts}   % Extra math fonts (e.g., blackboard bold)
+\usepackage{amsthm}
+\usepackage{derivative}
+
+% Extensions and fixes to amsmath
+\usepackage{mathtools}
+
+% For including graphics/images
+\usepackage{graphicx}
+
+% For setting page geometry (margins)
+\usepackage[a4paper, margin=1in]{geometry}
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[section]        
+
+\newtheorem{definition}{Definition}[section]
+
+\newtheorem{lemma}{Lemma}[section]
+
+\newtheorem{example}{Example}
+
+\begin{document}
+\section*{Statistic Notes}
+This is a Notes on Statistical Inference following the book by Mukhopadhay. The Notes begins with Chapter 7 Point Estimation
+\section*{Motivation}
+
+
+Consider a set of iid \textit{observable} random variables $X_1$ \dots $X_n$ having common pmf or pmf $f(x)$. We can index the whole $f(x)$ by some parameter $\vec{\theta}$ therefore we write the pmf or pdf as $f(x;\vec{\theta})$. The idea behind writing the whole pmf or pdf with a parameter is characterized by the notion of sufficient statistics.
+
+
+Suppose the parameter $\vec{\theta}$ is fixed but unknown and possible values of $\vec{\theta}$ belong to \textit{parameter space} $\vec{\Theta} \subset \mathbb{R}^n$
+
+For example, consider the normal distrbution $N(\mu,\sigma^2)$. If both parameters are unknown, then $\vec{\theta} = (\mu,\sigma^2) \in \Theta = \mathbb{R} \times \mathbb{R}^+$
+
+Basically, What we are trying to do is know more about the population by 'doing stuff' on currently known parameters or data. And the meaning of 'doing stuff' is the subject matter of this Chapter
+
+\section{Definition}
+\begin{definition}
+	An estimator ot a point estimator of the unknown parameter is a function $\vec{T} = \vec{T}(X_1,\dots,X_n)$ which is allowed to depend only on the observable random variables $X_1,\dots,X_n$. Once a particular data $\vec{X} = \vec{x}$ has been observed, the numerical value of the esimator must be computable.
+\end{definition}
+
+\section{Method of Moment}
+Suppose $\vec{\theta} = (\theta_1,\dots,\theta_k)$. Derive the first $k$ theoretical moments of the distribution $f(x;\vec{\theta})$ and pretend that they are equal to the corresponding sample memonts, thereby obtaining k equation in k unknown parameter $\theta_1,\dots,\theta_n$. The solution are hence the esimator.
+
+\begin{example}
+	Consider n iid sample $x_1, \dots,x_n$ from $X \sim U(0,\theta)$. We can use method of moment to get the estimator for parameter $\theta$. 
+	
+	Consider
+	\begin{equation*}
+		\mathbb{E}(X) = \frac{\theta}{2} = \frac{1}{n}\sum_{i=1}^{k} x_i
+	\end{equation*}
+	Solve $\theta$
+	\begin{equation*}
+		\hat{\theta} = \frac{2}{n}\sum_{i=1}^{k} x_i
+	\end{equation*}
+\end{example}
+The solution makes sense when we think about it: The sample mean is just half of $\theta$
+
+For two parameter distribution we use two moment
+\begin{example}
+	Condier $x_i ,\dots,x_n$ from $X \sim \mathbb{N}(\mu,\sigma^2)$. Then 
+	\begin{align*}
+		\mathbb{E}(X) = \mu \\
+		\mathbb{E}(X^2) = \mu^2 + \sigma^2
+	\end{align*}
+	Then 
+	\begin{align*}
+		\hat{\mu} = \bar{X} \\
+		\hat{\sigma^2} = n^{-1}\sum_{i=1}^{n} X_i^2 -\bar{X}^2
+	\end{align*}
+\end{example}
+\begin{example}
+	Consider $x_1,\dots,x_n$ from $X \sim Poi(\lambda)$. Then
+	\begin{align*}
+		\mathbb{E}(X) = \lambda
+		\mathbb{E}(X^2) = \lambda + \lambda^2
+	\end{align*}
+	If we start with considering the second moment instead of the first one. Then
+	\begin{equation*}
+		\lambda + \lambda^2 = n^{-1}\sum_{i=1}^{n} X_i^2
+	\end{equation*}
+	And solve it with quadratic formula will give something unexpected, as you can imagine.However if we only use first moment everything will be fine.
+\end{example}
+
+Notice in above example, MoM didn't give sufficient statistics in two cases(Example 1 and 3).
+
+However if 
+\begin{enumerate}
+	\item moment(s) didn't exist (e.g. Cauchy)
+	\item too difficult to calculate
+	\item or even being too weird(like Example 3)
+\end{enumerate}
+Then it is not a good idea to use MoM
+
+\section{Maximum Likelihood}
+Consider the \textit{Likelihood function} 
+\begin{equation*}
+	L(\vec{\theta}) = \prod_{i=1}^{n} f(x_i;\vec{\theta})
+\end{equation*}
+\begin{definition}
+	The maximum likelihood estimate of $\vec{\theta}$ is the value for which the likelihood function attain its maximum. To make life easier, we can also use the log of likelihood function
+	
+\end{definition}
+\begin{example}
+	Consider $X \sim \mathbf{N}(\mu,\sigma^2)$ with only $\mu$ unknown. The likelihood function is 
+	\begin{equation}
+		L(\mu) = \prod_{i=1}^{n}\sigma\sqrt(2\pi)^{-n}exp(\frac{-1}{2\sigma^2}\sum_{i=1}^{n}(x_i - \mu)^2)
+	\end{equation}
+	But we can also consider the log likelihood function to make the equation looks better
+	\begin{equation*}
+		logL(\mu) = c - (2\sigma^2)^{-1}\sum_{i=1}^{n}(x_i - \mu)^2
+	\end{equation*}
+	for some constant c \\
+	Then \\
+	\begin{equation*}
+		\frac{d}{d\mu}logL(\mu) = \sum_{i=1}^{n}(x_i - \mu)/\sigma^2
+	\end{equation*}
+if $\frac{d}{d\mu}logL(\mu) = 0$, then $\mu = \bar{x}$. We can check it is indeed maximum by second derivative test.
+\end{example}
+\begin{example}
+	With the same setup as above example but $\mu$ is also unknown. \\
+	Then we have to write the likehood and log likelihood function in a bit different way
+	\begin{align*}
+		L(\mu,\sigma^2)=\prod_{i=1}^{n} (2\pi)^{-n/2}(\sigma^2)^{-n/2}exp(\frac{-1}{2\sigma^2}\sum_{i=1}^{n}(x_i - \mu)^2) \\
+		logL(\mu,\sigma^2) = c - \frac{n}{2}log(\sigma^2) - \frac{1}{2\sigma^2}\sum_{i=1}^{n} (x_i - \mu)^2
+	\end{align*}
+	Take partial derivatives
+	\begin{align*}
+		\pdv{}{\mu}logL(\mu,\sigma^2) = \frac{1}{\sigma^2}\sum_{i=1}^{n}(x_i - \mu) \\
+		\pdv{}{\sigma^2}logL(\mu,\sigma^2) = \frac{n}{2\sigma^2} + \frac{1}{2\sigma^4}\sum_{i=1}^{n} (x_i - \mu)^2
+	\end{align*}
+	We get 
+	\begin{align*}
+		\mu = \bar{x} \\
+	\sigma^2 = n^{-1}\sum_{i=1}^{n}(x_i - \mu)^2
+	\end{align*}
+\end{example}
+\end{document}
+
